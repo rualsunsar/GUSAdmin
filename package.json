@@ -1,5 +1,5 @@
 {
-  "name": "vue-element-admin-express",
+  "name": "GUSAdmin",
   "version": "1.0.0",
   "description": "A magical vue admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "bigfool-cn <1063944784@qq.com>",
@@ -37,10 +37,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bigfool-cn/vue-element-admin-express.git"
+    "url": "git+https://github.com/rualsunsar/GUSAdmin.git"
   },
   "bugs": {
-    "url": "https://github.com/bigfool-cn/vue-element-admin-express/issues"
+    "url": "https://github.com/rualsunsar/GUSAdmin/issues"
   },
   "dependencies": {
     "@riophae/vue-treeselect": "^0.4.0",

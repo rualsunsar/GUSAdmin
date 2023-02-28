@@ -1,8 +1,8 @@
 FROM alpine AS builder
 
-RUN mkdir -p /vue-element-admin-express
+RUN mkdir -p /GUSAdmin
 
-WORKDIR /vue-element-admin-express
+WORKDIR /GUSAdmin
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
@@ -26,23 +26,23 @@ RUN npm install --production
 FROM alpine
 
 # MAINTAINER
-LABEL name="vue-element-admin-express"
+LABEL name="GUSAdmin"
 LABEL version="1.0.1"
-LABEL author="bigfool <1063944784@qq.com>"
-LABEL maintainer="bigfool <1063944784@qq.com>"
-LABEL description="vue-element-admin-express application"
+LABEL author="rualsunsar"
+LABEL maintainer="rualsunsar"
+LABEL description="GUSAdmin application"
 
-RUN mkdir -p /vue-element-admin-express \
-    && mkdir -p /vue-element-admin-express/logs
+RUN mkdir -p /GUSAdmin \
+    && mkdir -p /GUSAdmin/logs
 
-WORKDIR /vue-element-admin-express
+WORKDIR /GUSAdmin
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk add --no-cache --update nodejs nodejs-npm
 
-COPY --from=builder /vue-element-admin-express/node_modules ./node_modules
-COPY --from=builder /vue-element-admin-express/dist ./dist
+COPY --from=builder /GUSAdmin/node_modules ./node_modules
+COPY --from=builder /GUSAdmin/dist ./dist
 COPY ./server ./
 
 RUN find . -type d -name '.[^.]*' -prune -exec echo rm -rf {} + \
@@ -61,7 +61,7 @@ ENV TZ=Asia/Shanghai
 
 # 新建一个用户www 并设置项目目录用户组
 RUN adduser -D -H www \
-    && chown -R www /vue-element-admin-express
+    && chown -R www /GUSAdmin
 
 ENV NODE_ENV=production
 

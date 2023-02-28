@@ -22,7 +22,7 @@
       </template>
       <a
         title="github"
-        href="https://github.com/bigfool-cn/vue-element-admin-express"
+        href="https://github.com/rualsunsar/GUSAdmin"
         target="_blank"
         class="github-link"
       >
@@ -52,15 +52,6 @@
         <el-dropdown-menu slot="dropdown">
           <a target="_blank" href="https://www.bigfool.cn">
             <el-dropdown-item>博客</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://github.com/bigfool-cn/vue-element-admin-express">
-            <el-dropdown-item>Node版</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://github.com/bigfool-cn/go-element-admin">
-            <el-dropdown-item>Golang版</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://github.com/bigfool-cn/vue-element-admin-simple">
-            <el-dropdown-item>PHP版</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出</span>
