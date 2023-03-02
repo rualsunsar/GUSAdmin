@@ -151,6 +151,30 @@
         <el-form-item label="文章富文本" prop="richtext">
           <el-input v-model="form.richtext" type="textarea" placeholder="请输入文章正文" />
         </el-form-item>
+        <el-form-item label="封面图(大)">
+          <div class="selectBox">
+            <label for="file">
+              <div class="inputBox">选择图片(实时上传)</div>
+            </label>
+            <input
+              id="file"
+              type="file"
+              name="file"
+              accept="image/*"
+              capture="camera"
+              style="display: none"
+              @change="uploadAvator"
+            >
+          </div>
+          <!-- 预览图片 -->
+          <div v-if="showUploadImg !== ''" class="img">
+            <img
+              :src="showUploadImg"
+              alt=""
+              style="width: 200px; height: 200px; margin: 10px auto"
+            >
+          </div>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -162,6 +186,7 @@
 
 <script>
 import { listArticle, delArticle, addArticle, updateArticle } from '@/api/content/article'
+import { uploadImg } from '@/api/common'
 
 export default {
   name: 'Article',
@@ -213,7 +238,8 @@ export default {
         richtext: [
           { required: true, message: '文章富文本不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      showUploadImg: ''
     }
   },
   created() {
@@ -250,6 +276,7 @@ export default {
         status: 0,
         content: undefined
       }
+      this.showUploadImg = ''
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
@@ -286,8 +313,10 @@ export default {
         author: row.author,
         source: row.source,
         content: row.content,
-        richtext: row.richtext
+        richtext: row.richtext,
+        logoL: row.logoL
       }
+      this.showUploadImg = row.logoL ? `${process.env.VUE_APP_IMG}/${row.logoL}` : ''
       this.open = true
       this.title = '修改文章'
     },
@@ -325,6 +354,41 @@ export default {
         this.msgSuccess('删除成功')
       }).catch(function() {
       })
+    },
+    // 点击选择图片按钮
+    uploadAvator(e) {
+      console.log('uploadAvator', this.form.logoL)
+      if (this.form.logoL === '' || this.form.logoL == null) {
+        this.type = 'add'// 首次上传
+      } else {
+        this.type = 'updata'// 更新
+      }
+      const file = e.target.files[0] // 从input获取文件
+
+      // 以文件形式上传
+      this.formData = new FormData() // 实例化一个FormData对象
+      this.formData.append('logoL', file) // 将文件加入FormData对象中
+      this.formData.append('title', this.form.title)
+      this.formData.append('id', this.form.article_id)
+      this.formData.append('type', this.type)
+
+      this.uploadImg()
+
+      // 文件转base64,预览图片
+      const reader = new FileReader() // 实例化文件读取对象
+      reader.readAsDataURL(file) // 将文件读取为base64格式
+      reader.onload = () => { // 读取完成时的回调
+        this.showUploadImg = reader.result // reader.result=e.target.result存储的是文件的base64编码
+        const base64Str = reader.result
+        console.log(base64Str) // data:image/webp;base64,UklGRuYxAABXRUJQVlA4IN
+      }
+    },
+    // 上传图片
+    uploadImg() {
+      console.log('上传图片')
+      uploadImg(this.formData).then(response => {
+        this.getList()
+      })
     }
   }
 }
@@ -345,5 +409,16 @@ export default {
         margin-right: 12px;
       }
     }
+  }
+  .inputBox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 36px;
+    background-color: #1890ff;
+    border-color: #1890ff;
+    color: #fff;
+    cursor: pointer;
   }
 </style>
