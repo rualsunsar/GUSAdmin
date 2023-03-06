@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function uploadImg(data) {
+export function uploadLogoL(data) {
   return request({
-    url: '/article/uploadImg',
+    url: '/article/uploadLogoL',
     method: 'post',
     data
   })
