@@ -7,3 +7,19 @@ export function uploadLogoL(data) {
     data
   })
 }
+
+export function uploadLogoM(data) {
+  return request({
+    url: '/article/uploadLogoM',
+    method: 'post',
+    data
+  })
+}
+
+export function uploadLogoS(data) {
+  return request({
+    url: '/article/uploadLogoS',
+    method: 'post',
+    data
+  })
+}
