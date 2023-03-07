@@ -199,6 +199,30 @@
             >
           </div>
         </el-form-item>
+        <el-form-item v-if="form.article_id" label="封面图(小)">
+          <div class="selectBox">
+            <label for="fileLogoS">
+              <div class="inputBox">选择图片(实时上传)</div>
+            </label>
+            <input
+              id="fileLogoS"
+              type="file"
+              name="file"
+              accept="image/*"
+              capture="camera"
+              style="display: none"
+              @change="handleUploadLogoS"
+            >
+          </div>
+          <!-- 预览图片 -->
+          <div v-if="showuploadLogoS !== ''" class="img">
+            <img
+              :src="showuploadLogoS"
+              alt=""
+              style="width: 200px; height: 200px; margin: 10px auto"
+            >
+          </div>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -210,7 +234,7 @@
 
 <script>
 import { listArticle, delArticle, addArticle, updateArticle } from '@/api/content/article'
-import { uploadLogoL, uploadLogoM } from '@/api/common'
+import { uploadLogoL, uploadLogoM, uploadLogoS } from '@/api/common'
 
 export default {
   name: 'Article',
@@ -264,7 +288,8 @@ export default {
         ]
       },
       showuploadLogoL: '',
-      showuploadLogoM: ''
+      showuploadLogoM: '',
+      showuploadLogoS: ''
     }
   },
   created() {
@@ -303,6 +328,7 @@ export default {
       }
       this.showuploadLogoL = ''
       this.showuploadLogoM = ''
+      this.showuploadLogoS = ''
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
@@ -341,10 +367,12 @@ export default {
         content: row.content,
         richtext: row.richtext,
         logoL: row.logoL,
-        logoM: row.logoM
+        logoM: row.logoM,
+        logoS: row.logoS
       }
       this.showuploadLogoL = row.logoL ? `${process.env.VUE_APP_IMG}/${row.logoL}` : ''
       this.showuploadLogoM = row.logoM ? `${process.env.VUE_APP_IMG}/${row.logoM}` : ''
+      this.showuploadLogoS = row.logoS ? `${process.env.VUE_APP_IMG}/${row.logoS}` : ''
       this.open = true
       this.title = '修改文章'
     },
@@ -453,6 +481,43 @@ export default {
       uploadLogoM(this.formData).then(response => {
         if (response.code === 20000) {
           this.form.logoM = response.data
+        }
+        this.getList()
+      })
+    },
+    // 点击选择图片按钮
+    handleUploadLogoS(e) {
+      console.log('handleUploadLogoS, this.form.logoS')
+      if (this.form.logoS === '' || this.form.logoS == null) {
+        this.type = 'add'// 首次上传
+      } else {
+        this.type = 'updata'// 更新
+      }
+      const file = e.target.files[0] // 从input获取文件
+
+      // 以文件形式上传
+      this.formData = new FormData() // 实例化一个FormData对象
+      this.formData.append('logoS', file) // 将文件加入FormData对象中
+      this.formData.append('title', this.form.title)
+      this.formData.append('id', this.form.article_id)
+      this.formData.append('type', this.type)
+
+      this.uploadLogoS()
+
+      // 文件转base64,预览图片
+      const reader = new FileReader() // 实例化文件读取对象
+      reader.readAsDataURL(file) // 将文件读取为base64格式
+      reader.onload = () => { // 读取完成时的回调
+        this.showuploadLogoS = reader.result // reader.result=e.target.result存储的是文件的base64编码
+        const base64Str = reader.result
+        console.log(base64Str) // data:image/webp;base64,UklGRuYxAABXRUJQVlA4IN
+      }
+    },
+    // 上传图片
+    uploadLogoS() {
+      uploadLogoS(this.formData).then(response => {
+        if (response.code === 20000) {
+          this.form.logoS = response.data
         }
         this.getList()
       })

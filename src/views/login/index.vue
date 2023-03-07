@@ -46,17 +46,6 @@
       </el-tooltip>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
-
-      <div style="position:relative">
-        <div class="tips">
-          <span>帐号 : bigfool</span>
-          <span>密码 : bigfool.cn</span>
-        </div>
-        <div class="tips">
-          <span>帐号 : usenav</span>
-          <span>密码 : usenav.com</span>
-        </div>
-      </div>
     </el-form>
   </div>
 </template>
